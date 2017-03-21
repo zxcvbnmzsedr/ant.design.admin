@@ -2,7 +2,7 @@ import {login} from '../service/user';
 export default {
     namespace: 'users',
     state: {
-        login: false,
+        login: true,
         loading: false,
         user: {
             name:"aaaa"

@@ -11,7 +11,6 @@ class PCIndex extends React.Component{
     }
     componentDidUpdate(){
         const {loginMessage,user,login} = this.props.users;
-        console.log(user)
         if(!login&&loginMessage.length > 0){
             message.error(loginMessage);
         }

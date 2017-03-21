@@ -40,8 +40,8 @@ export default class PCDashboard extends React.Component {
                             <Breadcrumb.Item>User</Breadcrumb.Item>
                             <Breadcrumb.Item>Bill</Breadcrumb.Item>
                         </Breadcrumb>
-                        <div style={{ padding: 24, background: '#fff', minHeight: 500 }}>
-                            Bill is a cat.
+                        <div style={{ padding: 24, background: '#fff', minHeight: '700px' }}>
+                            {this.props.children}
                         </div>
                     </Content>
                     <PCFooter>Footer</PCFooter>
