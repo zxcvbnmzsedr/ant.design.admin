@@ -2,14 +2,13 @@ import {login} from '../service/user';
 export default {
     namespace: 'users',
     state: {
-        login: true,
+        login: false,
         loading: false,
         user: {
             name:"aaaa"
         },
         loginMessage:"" // 登录提示信息
-    },
-    reducers: {
+    },    reducers: {
         loginSuccess(state,action){
             console.log(state);
             return{
