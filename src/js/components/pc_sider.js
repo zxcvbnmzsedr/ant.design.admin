@@ -11,14 +11,24 @@ const SubMenu = Menu.SubMenu;
 import '../../css/dashboard.css';
 export default class PCSider extends React.Component {
     render() {
-        console.log(window.location.hash)
         console.log((window.location.hash.split("/")[window.location.hash.split('/').length - 2]).split("?")[0])
+        console.log((window.location.hash.split("/")[window.location.hash.split('/').length - 1]).split("?")[0])
         return (
             <div>
                 <div className="logo" />
                 <Menu theme="dark" mode={this.props.mode}
                       defaultOpenKeys={[(window.location.hash.split("/")[window.location.hash.split('/').length - 2]).split("?")[0]]}
-                      defaultSelectedKeys={[(window.location.hash.split("/")[window.location.hash.split('/').length - 1]).split("?")[0]]}>
+                      defaultSelectedKeys={[(window.location.hash.split("/")[window.location.hash.split('/').length - 1]).split("?")[0] || 'dashboard']}>
+                    <Menu.Item key="dashboard">
+                        <Link to={`/dashboard`}>
+                            <span>
+                                <Icon type="file"/>
+                                <span className="nav-text">
+                                控制台
+                                </span>
+                            </span>
+                        </Link>
+                    </Menu.Item>
                     <SubMenu
                         key="sub1"
                         title={<span><Icon type="user"/><span className="nav-text">User</span></span>}>
@@ -31,11 +41,7 @@ export default class PCSider extends React.Component {
                         <Menu.Item key="4">Team 1</Menu.Item>
                         <Menu.Item key="5">Team 2</Menu.Item>
                     </SubMenu>
-                    <Menu.Item key="6">
-                              <span>
-                                <Icon type="file"/>
-                                <span className="nav-text">File</span>
-                              </span>
+                    <Menu.Item key="6"><span><Icon type="file"/><span className="nav-text">File</span></span>
                     </Menu.Item>
                 </Menu>
             </div>

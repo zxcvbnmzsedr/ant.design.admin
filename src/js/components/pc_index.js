@@ -4,7 +4,7 @@ const SubMenu = Menu.SubMenu;
 import 'antd/dist/antd.less';
 import {connect} from 'dva';
 import LoginComponents from './pc_login';
-import PCDashboard from './pc_dashboard'
+import PCDashboard from './pc_layout'
 class PCIndex extends React.Component{
     constructor(){
         super();
