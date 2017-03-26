@@ -21,7 +21,7 @@ class PCIndex extends React.Component{
             <div>
                 {login?
                     <div>
-                        <PCDashboard/>
+                        <PCDashboard location={this.props.location}/>
                     </div> : <LoginComponents/>
                 }
             </div>

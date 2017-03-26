@@ -10,15 +10,16 @@ import { Link } from 'dva/router'
 const SubMenu = Menu.SubMenu;
 import '../../css/dashboard.css';
 export default class PCSider extends React.Component {
+    componentDidUpdate(){
+
+    }
     render() {
-        console.log((window.location.hash.split("/")[window.location.hash.split('/').length - 2]).split("?")[0])
-        console.log((window.location.hash.split("/")[window.location.hash.split('/').length - 1]).split("?")[0])
         return (
             <div>
                 <div className="logo" />
                 <Menu theme="dark" mode={this.props.mode}
-                      defaultOpenKeys={[(window.location.hash.split("/")[window.location.hash.split('/').length - 2]).split("?")[0]]}
-                      defaultSelectedKeys={[(window.location.hash.split("/")[window.location.hash.split('/').length - 1]).split("?")[0] || 'dashboard']}>
+                      defaultOpenKeys={[(this.props.location.pathname.split("/")[window.location.hash.split('/').length - 2])]}
+                      defaultSelectedKeys={[(this.props.location.pathname.split("/")[window.location.hash.split('/').length - 1]) || 'dashboard']}>
                     <Menu.Item key="dashboard">
                         <Link to={`/dashboard`}>
                             <span>

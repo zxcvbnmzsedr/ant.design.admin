@@ -34,7 +34,7 @@ export default class PCLayout extends React.Component {
                 <Sider collapsible
                        collapsed={this.state.collapsed}
                        onCollapse={this.onCollapse.bind(this)}>
-                    <PCSider mode={this.state.mode}/>
+                    <PCSider mode={this.state.mode} location={this.props.location}/>
                 </Sider>
                 <Layout>
                     <PCHeader>Header</PCHeader>
