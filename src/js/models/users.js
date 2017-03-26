@@ -1,14 +1,23 @@
-import {login} from '../service/user';
+import {login,query} from '../service/user';
 export default {
     namespace: 'users',
     state: {
+        list: [],
         login: true,
         loading: false,
         user: {
             name:"aaaa"
         },
+        pagination: {
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: total => `共 ${total} 条`,
+            current: 1,
+            total: null
+        },
         loginMessage:"" // 登录提示信息
-    },    reducers: {
+    },
+    reducers: {
         loginSuccess(state,action){
             console.log(state);
             return{
@@ -23,7 +32,17 @@ export default {
                 ...action.payload,
                 login:false
             }
-        }
+        },
+        querySuccess (state, action) {
+            const {list, pagination} = action.payload
+            return { ...state,
+                list,
+                loading: false,
+                pagination: {
+                    ...state.pagination,
+                    ...pagination
+                }}
+        },
     },
     effects: {
         *login({payload},{call, put}){
@@ -42,6 +61,20 @@ export default {
                     type:"loginFailure",
                     payload:{
                         loginMessage:data.message
+                    }
+                })
+            }
+        },
+        *listAll({payload},{call, put}){
+            console.log("dispatch分发过来的");
+            console.log(JSON.stringify(payload));
+            const data = yield query(JSON.stringify(payload))
+            if(data.success){
+                yield put({
+                    type:"querySuccess",
+                    payload:{
+                        list: data.obj,
+                        pagination: data.page
                     }
                 })
             }

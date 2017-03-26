@@ -3,8 +3,13 @@
  */
 import { request} from '../utils';
 export async  function login (params) {
-    return request('/api/login', {
+    return request('/user/query', {
         method: 'post',
         data: params
+    })
+}
+export async  function query(params) {
+    return request('/user/list', {
+        method: 'get'
     })
 }
