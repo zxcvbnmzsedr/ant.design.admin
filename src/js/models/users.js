@@ -1,4 +1,4 @@
-import {login,query} from '../service/user';
+import {login,query,remove} from '../service/user';
 export default {
     namespace: 'users',
     state: {
@@ -43,7 +43,18 @@ export default {
                     ...pagination
                 }}
         },
-    },
+        removeSuccess(state, action){
+            const {list, pagination} = action.payload
+            return { ...state,
+                list,
+                loading: false,
+                pagination: {
+                    ...state.pagination,
+                    ...pagination
+                }}
+        }
+    }
+    ,
     effects: {
         *login({payload},{call, put}){
             console.log("dispatch分发过来的");
@@ -75,6 +86,20 @@ export default {
                     payload:{
                         list: data.obj,
                         pagination: data.page
+                    }
+                })
+            }
+        },
+        *remove({payload},{call, put}){
+            console.log("dispatch分发过来的");
+            console.log(payload);
+            const data = yield remove(payload.id)
+            if(data.success){
+                yield put({
+                    type:"removeSuccess",
+                    payload:{
+                        // list: data.obj,
+                        // pagination: data.page
                     }
                 })
             }

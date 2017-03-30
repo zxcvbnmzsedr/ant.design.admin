@@ -13,3 +13,8 @@ export async  function query(params) {
         method: 'get'
     })
 }
+export async  function remove(params) {
+    return request('/user/remove/'+params, {
+        method: 'delete'
+    })
+}

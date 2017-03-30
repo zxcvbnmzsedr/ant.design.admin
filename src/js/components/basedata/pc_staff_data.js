@@ -1,17 +1,24 @@
 /**
  * Created by tianzeng on 2017-03-26.
  */
-import {Table} from 'antd';
+import {Table, Popconfirm, Button,message } from 'antd';
 import React from 'react';
-import { connect } from 'dva';
+import {connect} from 'dva';
 
 class PCStaffData extends React.Component {
-    constructor(){
-        super();
 
+    constructor() {
+        super();
     }
-    componentWillMount(){
-        this.props.dispatch({type: 'users/listAll',payload: ""});
+    componentWillMount() {
+        this.props.dispatch({type: 'users/listAll', payload: ""});
+    }
+    handleDeleteAction(id){
+        message.success('删除成功');
+        this.props.dispatch({
+            type:'users/remove',
+            payload: {id}
+        })
     }
     render() {
         const columns = [
@@ -20,10 +27,19 @@ class PCStaffData extends React.Component {
             {title: '部门', dataIndex: 'department', key: 'department'},
             {title: '联系方式', dataIndex: 'contactInformation', key: 'contactInformation'},
             {title: '籍贯', dataIndex: 'nativePlace', key: 'nativePlace'},
+            {
+                title: 'Action',
+                key: 'action',
+                render: (text, record) => (
+                    <Popconfirm title="确定删除用户?" onConfirm={this.handleDeleteAction.bind(this,record.jobNumber)} okText="是" cancelText="否">
+                        <Button href="#">删除</Button>
+                    </Popconfirm>
+                ),
+            }
         ];
         const {list} = this.props.users;
-        const {dispatch} = this.props;
         const data = list.content;
+        const {dispatch} = this.props;
         console.log(list.content);
         var pagination = {
             total: list.length,
@@ -33,12 +49,12 @@ class PCStaffData extends React.Component {
                 this.current = current
                 dispatch({
                     type: 'users/listAll',
-                    payload: {size:5, page:current}
+                    payload: {size: 5, page: current}
                 });
             }
         };
         return (
-            <Table rowKey="id" columns={columns} dataSource={data} pagination={pagination} />
+            <Table rowKey="id" columns={columns} dataSource={data} pagination={pagination}/>
         );
     }
 }
