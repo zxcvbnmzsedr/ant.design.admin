@@ -1,7 +1,7 @@
 /**
  * Created by tianzeng on 2017-03-26.
  */
-import {Pagination ,Table, Badge, Menu, Dropdown, Icon} from 'antd';
+import {Table} from 'antd';
 import React from 'react';
 import { connect } from 'dva';
 
