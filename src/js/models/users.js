@@ -5,21 +5,14 @@ export default {
         list: [],
         login: true,
         loading: false,
+        queryMessage:"",
         user: {
             name:"aaaa"
-        },
-        pagination: {
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: total => `共 ${total} 条`,
-            current: 1,
-            total: null
         },
         loginMessage:"" // 登录提示信息
     },
     reducers: {
         loginSuccess(state,action){
-            console.log(state);
             return{
                 ...state,
                 ...action.payload,
@@ -34,18 +27,9 @@ export default {
             }
         },
         querySuccess (state, action) {
-            const {list, pagination} = action.payload
+            const {list, pagination,queryMessage} = action.payload
             return { ...state,
-                list,
-                loading: false,
-                pagination: {
-                    ...state.pagination,
-                    ...pagination
-                }}
-        },
-        removeSuccess(state, action){
-            const {list, pagination} = action.payload
-            return { ...state,
+                queryMessage,
                 list,
                 loading: false,
                 pagination: {
@@ -85,6 +69,7 @@ export default {
                     type:"querySuccess",
                     payload:{
                         list: data.obj,
+                        queryMessage:payload,
                         pagination: data.page
                     }
                 })
@@ -94,15 +79,12 @@ export default {
             console.log("dispatch分发过来的");
             console.log(payload);
             const data = yield remove(payload.id)
-            if(data.success){
-                yield put({
-                    type:"removeSuccess",
+            yield put({
+                    type:"listAll",
                     payload:{
-                        // list: data.obj,
-                        // pagination: data.page
+                        deleteMessage:data.message
                     }
                 })
-            }
         }
     },
     subscriptions: {

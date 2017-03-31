@@ -4,22 +4,23 @@
 import {Table, Popconfirm, Button,message } from 'antd';
 import React from 'react';
 import {connect} from 'dva';
-
 class PCStaffData extends React.Component {
-
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
     componentWillMount() {
         this.props.dispatch({type: 'users/listAll', payload: ""});
     }
+    componentDidUpdate(){
+    }
+
     handleDeleteAction(id){
-        message.success('删除成功');
         this.props.dispatch({
             type:'users/remove',
             payload: {id}
         })
     }
+
     render() {
         const columns = [
             {title: '姓名', dataIndex: 'teacherName', key: 'teacherName'},
@@ -37,9 +38,12 @@ class PCStaffData extends React.Component {
                 ),
             }
         ];
-        const {list} = this.props.users;
+        const {list,queryMessage} = this.props.users;
         const data = list.content;
         const {dispatch} = this.props;
+        if((queryMessage.deleteMessage||"").length > 0){
+            message.error(queryMessage.deleteMessage)
+        }
         console.log(list.content);
         var pagination = {
             total: list.length,
@@ -58,5 +62,4 @@ class PCStaffData extends React.Component {
         );
     }
 }
-
 export default connect(({users}) => ({users}))(PCStaffData)
