@@ -18,3 +18,9 @@ export async  function remove(params) {
         method: 'delete'
     })
 }
+export async  function create(params) {
+    return request('/user/create/', {
+        method: 'post',
+        data: params
+    })
+}

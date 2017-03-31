@@ -1,4 +1,4 @@
-import {login,query,remove} from '../service/user';
+import {login,query,remove,create} from '../service/user';
 export default {
     namespace: 'users',
     state: {
@@ -85,6 +85,17 @@ export default {
                         deleteMessage:data.message
                     }
                 })
+        },
+        *create({payload},{call, put}){
+            console.log("创建用户");
+            console.log(payload);
+            const data = yield create(JSON.stringify(payload))
+            yield put({
+                type:"listAll",
+                payload:{
+                    deleteMessage:data.message
+                }
+            })
         }
     },
     subscriptions: {

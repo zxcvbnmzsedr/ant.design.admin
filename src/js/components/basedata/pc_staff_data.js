@@ -4,6 +4,7 @@
 import {Table, Popconfirm, Button,message } from 'antd';
 import React from 'react';
 import {connect} from 'dva';
+import PCStaffModel from './pc_staff_model';
 class PCStaffData extends React.Component {
     constructor(props) {
         super(props);
@@ -11,16 +12,18 @@ class PCStaffData extends React.Component {
     componentWillMount() {
         this.props.dispatch({type: 'users/listAll', payload: ""});
     }
-    componentDidUpdate(){
-    }
-
     handleDeleteAction(id){
         this.props.dispatch({
             type:'users/remove',
             payload: {id}
         })
     }
-
+    createHandler(values) {
+        this.props.dispatch({
+            type: 'users/create',
+            payload: values,
+        });
+    }
     render() {
         const columns = [
             {title: '姓名', dataIndex: 'teacherName', key: 'teacherName'},
@@ -44,7 +47,6 @@ class PCStaffData extends React.Component {
         if((queryMessage.deleteMessage||"").length > 0){
             message.error(queryMessage.deleteMessage)
         }
-        console.log(list.content);
         var pagination = {
             total: list.length,
             defaultCurrent: 1,
@@ -57,8 +59,16 @@ class PCStaffData extends React.Component {
                 });
             }
         };
+
         return (
-            <Table rowKey="id" columns={columns} dataSource={data} pagination={pagination}/>
+            <div>
+                <div>
+                    <PCStaffModel record={{}} onOk={this.createHandler.bind(this)}>
+                        <Button type="primary">创建用户</Button>
+                    </PCStaffModel>
+                </div>
+                <Table rowKey="id" columns={columns} dataSource={data} pagination={pagination}/>
+            </div>
         );
     }
 }
