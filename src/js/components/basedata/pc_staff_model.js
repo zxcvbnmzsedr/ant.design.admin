@@ -33,6 +33,9 @@ class PCStaffModel extends React.Component{
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
+        const { jobNumber,teacherName,department,contactInformation,nativePlace } = this.props.record;
+        console.log("教师姓名")
+        console.log(this.props.record)
         return(
             <div>
                 <span onClick={this.showModelHandler.bind(this)}>
@@ -46,6 +49,7 @@ class PCStaffModel extends React.Component{
                     <Form>
                         <FormItem hasFeedback>
                             {getFieldDecorator('teacherName', {
+                                initialValue: teacherName,
                                 rules: [
                                     {
                                         required: true,
@@ -56,6 +60,7 @@ class PCStaffModel extends React.Component{
                         </FormItem>
                         <FormItem hasFeedback>
                             {getFieldDecorator('jobNumber', {
+                                initialValue: jobNumber,
                                 rules: [
                                     {
                                         required: true,
@@ -66,6 +71,7 @@ class PCStaffModel extends React.Component{
                         </FormItem>
                         <FormItem hasFeedback>
                             {getFieldDecorator('department', {
+                                initialValue: department,
                                 rules: [
                                     {
                                         required: true,
@@ -76,10 +82,12 @@ class PCStaffModel extends React.Component{
                         </FormItem>
                         <FormItem hasFeedback>
                             {getFieldDecorator('contactInformation', {
+                                initialValue: contactInformation,
                             })(<Input size='large' placeholder='联系方式' />)}
                         </FormItem>
                         <FormItem hasFeedback>
                             {getFieldDecorator('nativePlace', {
+                                initialValue: nativePlace,
                             })(<Input size='large' placeholder='籍贯' />)}
                         </FormItem>
                     </Form>

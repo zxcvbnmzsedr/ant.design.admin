@@ -1,7 +1,7 @@
 /**
  * Created by tianzeng on 2017-03-26.
  */
-import {Table, Popconfirm, Button,message } from 'antd';
+import {Table, Popconfirm, Button,message ,Row,Col} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
 import PCStaffModel from './pc_staff_model';
@@ -32,12 +32,17 @@ class PCStaffData extends React.Component {
             {title: '联系方式', dataIndex: 'contactInformation', key: 'contactInformation'},
             {title: '籍贯', dataIndex: 'nativePlace', key: 'nativePlace'},
             {
-                title: 'Action',
+                title: '操作',
                 key: 'action',
                 render: (text, record) => (
-                    <Popconfirm title="确定删除用户?" onConfirm={this.handleDeleteAction.bind(this,record.jobNumber)} okText="是" cancelText="否">
-                        <Button href="#">删除</Button>
-                    </Popconfirm>
+                        <Row>
+                            <Col span="6"> <PCStaffModel record={record} onOk={this.createHandler.bind(this)}>
+                                <Button type="primary">编辑</Button>
+                            </PCStaffModel></Col>
+                            <Col span="6"><Popconfirm title="确定删除用户?" onConfirm={this.handleDeleteAction.bind(this,record.jobNumber)} okText="是" cancelText="否">
+                                <Button href="#">删除</Button>
+                            </Popconfirm></Col>
+                        </Row>
                 ),
             }
         ];
