@@ -25,6 +25,9 @@ export default function request(url, options) {
             if(res.status === 404){
                 return Promise.reject(new Object(204));
             }
+            if(res.status === 500){
+                return Promise.reject(res.json());
+            }
             return res.json();
 
         });

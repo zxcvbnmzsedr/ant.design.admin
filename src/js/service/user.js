@@ -3,7 +3,7 @@
  */
 import { request,isEmptyObject} from '../utils';
 export async  function login (params) {
-    return request('/user/login', {
+    return request('/users/login', {
         method: 'POST',
         data: params
     })
@@ -31,5 +31,12 @@ export async  function update(params,url) {
     return request(url, {
         method: 'put',
         data: JSON.stringify(params)
+    })
+}
+
+export async  function queryRoles(params) {
+    params = params.split('/api')[1];
+    return request(params, {
+        method: 'get'
     })
 }

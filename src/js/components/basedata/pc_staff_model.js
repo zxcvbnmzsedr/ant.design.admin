@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input } from 'antd';
+import {Menu, Modal, Form, Icon,Input ,Dropdown,Button,message} from 'antd';
 const FormItem = Form.Item;
-
+import {update,query,remove,create,queryRoles} from '../../service/user';
 class PCStaffModel extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
             visible: false,
+            roles:""
         };
     }
     showModelHandler(e){
@@ -30,10 +31,40 @@ class PCStaffModel extends React.Component{
             }
         });
     };
+    componentDidMount() {
+        this.loadFromServer();
+    }
+    loadFromServer() {
+        for(var key in this.props.record._links){
+            if(key == 'roles'){
+                console.log(this.props.record._links.roles.href)
+                const data = queryRoles(this.props.record._links.roles.href);
+                Promise.resolve(data).then((value)=> {
+                   console.log(value._embedded);
+                   console.log(value._embedded.roles[0].description);
+                   this.setState({
+                       roles:value._embedded.roles[0].description
+                   })
+                }).catch((value)=> {
+
+                })
+
+            }
+
+        }
+    };
+
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
         const { username,password } = this.props.record;
+        const menu = (
+            <Menu>
+                <Menu.Item key="1">1st menu item</Menu.Item>
+                <Menu.Item key="2">2nd menu item</Menu.Item>
+                <Menu.Item key="3">3d menu item</Menu.Item>
+            </Menu>
+        );
         return(
             <div>
                 <span onClick={this.showModelHandler.bind(this)}>
@@ -67,52 +98,22 @@ class PCStaffModel extends React.Component{
                                 ]
                             })(<Input size='large' placeholder='密码' />)}
                         </FormItem>
+                        <FormItem hasFeedback>
+                            {getFieldDecorator('password', {
+                                initialValue: password,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '请填写密码'
+                                    }
+                                ]
+                            })(<Dropdown overlay={menu}>
+                                <Button style={{ marginLeft: 8 }}>
+                                    {this.state.roles} <Icon type="down" />
+                                </Button>
+                            </Dropdown>)}
+                        </FormItem>
                     </Form>
-                    {/*<Form>
-                        <FormItem hasFeedback>
-                            {getFieldDecorator('teacherName', {
-                                initialValue: teacherName,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请填写姓名'
-                                    }
-                                ]
-                            })(<Input size='large' placeholder='姓名' />)}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                            {getFieldDecorator('jobNumber', {
-                                initialValue: jobNumber,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请填写工号'
-                                    }
-                                ]
-                            })(<Input size='large' placeholder='工号' />)}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                            {getFieldDecorator('department', {
-                                initialValue: department,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请填写部门'
-                                    }
-                                ]
-                            })(<Input size='large' placeholder='部门' />)}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                            {getFieldDecorator('contactInformation', {
-                                initialValue: contactInformation,
-                            })(<Input size='large' placeholder='联系方式' />)}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                            {getFieldDecorator('nativePlace', {
-                                initialValue: nativePlace,
-                            })(<Input size='large' placeholder='籍贯' />)}
-                        </FormItem>
-                    </Form>*/}
                 </Modal>
             </div>
         );

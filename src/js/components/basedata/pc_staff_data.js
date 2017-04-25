@@ -5,7 +5,7 @@ import {Table, Popconfirm, Button,message ,Row,Col} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
 import PCStaffModel from './pc_staff_model';
-import {update,query,remove,create} from '../../service/user';
+import {update,query,remove,create,queryRoles} from '../../service/user';
 import { isEmptyObject} from '../../utils';
 class PCStaffData extends React.Component {
     constructor(props) {
@@ -34,9 +34,13 @@ class PCStaffData extends React.Component {
         const data = query();
         Promise.resolve(data).then((value)=> {
             this.setState({
-                   data:value._embedded.users
+                    data:value._embedded.users
                 }
-            )
+            );
+        }).catch((value)=> {
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
         })
     }
     createHandler(values,record) {
@@ -57,6 +61,7 @@ class PCStaffData extends React.Component {
         const columns = [
             {title: '姓名', dataIndex: 'username', key: 'username'},
             {title: '密码', dataIndex: 'password', key: 'password'},
+            {title: '角色', dataIndex: 'rolesDescribe', key: 'rolesDescribe'},
             /*{title: '部门', dataIndex: 'department', key: 'department'},
             {title: '联系方式', dataIndex: 'contactInformation', key: 'contactInformation'},
             {title: '籍贯', dataIndex: 'nativePlace', key: 'nativePlace'},*/
