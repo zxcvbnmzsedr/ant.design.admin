@@ -2,14 +2,22 @@ import {login,query,remove,create} from '../service/user';
 export default {
     namespace: 'users',
     state: {
-        list: [],
-        login: true,
-        loading: false,
+        login: false,
         queryMessage:"",
+        token:"",
         user: {
             name:"aaaa"
         },
-        loginMessage:"" // 登录提示信息
+        loginMessage:"" ,// 登录提示,
+
+
+        list: [],
+        total: null,
+        loading: false, // 控制加载状态
+        current: null, // 当前分页信息
+        currentItem: {}, // 当前操作的用户对象
+        modalVisible: false, // 弹出窗的显示状态
+        modalType: 'create',
     },
     reducers: {
         loginSuccess(state,action){
@@ -26,17 +34,6 @@ export default {
                 login:false
             }
         },
-        querySuccess (state, action) {
-            const {list, pagination,queryMessage} = action.payload
-            return { ...state,
-                queryMessage,
-                list,
-                loading: false,
-                pagination: {
-                    ...state.pagination,
-                    ...pagination
-                }}
-        }
     }
     ,
     effects: {
@@ -44,11 +41,16 @@ export default {
             console.log("dispatch分发过来的");
             console.log(JSON.stringify(payload));
             const data = yield login(JSON.stringify(payload))
-            if(data.success){
+            console.log(data);
+            if(data.code == 200){
+                if (data.obj.token) {
+                    sessionStorage.setItem('token', data.obj.token);
+                }
                 yield put({
                     type:"loginSuccess",
                     payload:{
-                        user:payload.username
+                        user:data.obj.userId,
+                        token:data.obj.token
                     }
                 })
             }else {
@@ -60,20 +62,19 @@ export default {
                 })
             }
         },
-        *listAll({payload},{call, put}){
+        *query({payload},{call, put}){
             console.log("dispatch分发过来的");
             console.log(JSON.stringify(payload));
             const data = yield query(JSON.stringify(payload))
-            if(data.success){
+            console.log(data);
                 yield put({
                     type:"querySuccess",
                     payload:{
-                        list: data.obj,
+                        list: data,
                         queryMessage:payload,
                         pagination: data.page
                     }
                 })
-            }
         },
         *remove({payload},{call, put}){
             console.log("dispatch分发过来的");

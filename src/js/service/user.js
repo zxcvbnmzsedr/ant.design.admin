@@ -1,26 +1,35 @@
 /**
  * Created by tianzeng on 2017-03-16.
  */
-import { request} from '../utils';
+import { request,isEmptyObject} from '../utils';
 export async  function login (params) {
-    return request('/user/query', {
-        method: 'post',
+    return request('/user/login', {
+        method: 'POST',
         data: params
     })
 }
 export async  function query(params) {
-    return request('/user/list', {
+    return request('/users', {
         method: 'get'
     })
 }
 export async  function remove(params) {
-    return request('/user/remove/'+params, {
+    params = params.split('/api')[1];
+    return request(params, {
         method: 'delete'
     })
 }
 export async  function create(params) {
-    return request('/user/create/', {
+    return request('/users', {
         method: 'post',
-        data: params
+        data: JSON.stringify(params)
+    })
+}
+
+export async  function update(params,url) {
+    url = url.split('/api')[1];
+    return request(url, {
+        method: 'put',
+        data: JSON.stringify(params)
     })
 }

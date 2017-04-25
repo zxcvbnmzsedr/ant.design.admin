@@ -38,7 +38,17 @@ Date.prototype.format = function (format) {
     }
     return format
 }
+function isEmptyObject(obj){
+    console.log("---------------")
+    for(var n in obj){
+        return false
+    }
+    console.log("------------")
+    return true;
+}
+
 module.exports = {
+    isEmptyObject,
     config,
     menu,
     request,

@@ -2,7 +2,7 @@ let webpack = require('webpack');
 
 module.exports = {
     context: __dirname + '/src',
-    entry: ['babel-polyfill','./js/index.js'],
+    entry: ['babel-polyfill','./js/index.js','whatwg-fetch'],
     output: {
         path: __dirname+"/src/",
         filename: 'bundle.js'
@@ -10,7 +10,7 @@ module.exports = {
     devServer:{
         proxy: {
             '/api/*': {
-                target: 'http://localhost:3001'
+                target: 'http://localhost:8081'
             }
         },
     },

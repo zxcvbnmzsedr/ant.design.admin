@@ -12,7 +12,6 @@ export default class PCHeader extends React.Component{
     render(){
         return(
             <Header style={{ background: '#fff', padding: 0 }}>
-
             </Header>
         );
     }

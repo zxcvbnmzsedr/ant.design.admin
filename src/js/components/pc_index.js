@@ -1,14 +1,19 @@
 import React from 'react';
 import {Menu, Breadcrumb, Icon,message} from 'antd';
-const SubMenu = Menu.SubMenu;
 import 'antd/dist/antd.less';
 import {connect} from 'dva';
 import LoginComponents from './pc_login';
-import PCDashboard from './pc_layout'
+import PCDashboard from './pc_layout';
+import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 class PCIndex extends React.Component{
     constructor(){
         super();
+
     }
+    componentWillMount() {
+        const { cookies } = this.props;
+    }
+
     componentDidUpdate(){
         const {loginMessage,user,login} = this.props.users;
         if(!login&&loginMessage.length > 0){

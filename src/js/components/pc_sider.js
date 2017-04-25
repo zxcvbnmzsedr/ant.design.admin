@@ -33,7 +33,7 @@ export default class PCSider extends React.Component {
                     <SubMenu
                         key="BaseData"
                         title={<span><Icon type="user"/><span className="nav-text">基础数据</span></span>}>
-                        <Menu.Item key="StaffData"><Link to={`/BaseData/StaffData`}>教工数据</Link></Menu.Item>
+                        <Menu.Item key="StaffData"><Link to={`/BaseData/StaffData`}>用户数据</Link></Menu.Item>
                         <Menu.Item key="bill"><Link to={`/sub1/bill`}>Bill</Link></Menu.Item>
                         <Menu.Item key="3">Alex</Menu.Item>
                     </SubMenu>

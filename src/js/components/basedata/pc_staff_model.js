@@ -25,7 +25,7 @@ class PCStaffModel extends React.Component{
         const { onOk } = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                onOk(values);
+                onOk(values,this.props.record);
                 this.hideModelHandler();
             }
         });
@@ -33,9 +33,7 @@ class PCStaffModel extends React.Component{
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
-        const { jobNumber,teacherName,department,contactInformation,nativePlace } = this.props.record;
-        console.log("教师姓名")
-        console.log(this.props.record)
+        const { username,password } = this.props.record;
         return(
             <div>
                 <span onClick={this.showModelHandler.bind(this)}>
@@ -47,6 +45,30 @@ class PCStaffModel extends React.Component{
                     title="创建用户"
                     visible={this.state.visible}>
                     <Form>
+                        <FormItem hasFeedback>
+                            {getFieldDecorator('username', {
+                                initialValue: username,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '请填写用户名'
+                                    }
+                                ]
+                            })(<Input size='large' placeholder='姓名' />)}
+                        </FormItem>
+                        <FormItem hasFeedback>
+                            {getFieldDecorator('password', {
+                                initialValue: password,
+                                rules: [
+                                    {
+                                        required: true,
+                                        message: '请填写密码'
+                                    }
+                                ]
+                            })(<Input size='large' placeholder='密码' />)}
+                        </FormItem>
+                    </Form>
+                    {/*<Form>
                         <FormItem hasFeedback>
                             {getFieldDecorator('teacherName', {
                                 initialValue: teacherName,
@@ -90,7 +112,7 @@ class PCStaffModel extends React.Component{
                                 initialValue: nativePlace,
                             })(<Input size='large' placeholder='籍贯' />)}
                         </FormItem>
-                    </Form>
+                    </Form>*/}
                 </Modal>
             </div>
         );

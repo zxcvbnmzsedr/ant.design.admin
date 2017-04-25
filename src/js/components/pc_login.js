@@ -7,6 +7,7 @@ import styles from '../../css/login.css';
 import { connect } from 'dva';
 import { config } from '../utils';
 const FormItem = Form.Item;
+
 class LoginComponents extends React.Component{
     constructor(){
         super();
@@ -40,7 +41,7 @@ class LoginComponents extends React.Component{
                             rules: [
                                 {
                                     required: true,
-                                    message: '请填写用户名'
+                                    message: '请填写用 户名'
                                 }
                             ]
                         })(<Input size='large' placeholder='用户名' />)}

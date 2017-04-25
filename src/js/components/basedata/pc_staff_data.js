@@ -5,32 +5,61 @@ import {Table, Popconfirm, Button,message ,Row,Col} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
 import PCStaffModel from './pc_staff_model';
+import {update,query,remove,create} from '../../service/user';
+import { isEmptyObject} from '../../utils';
 class PCStaffData extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            data:[]
+        }
+
     }
     componentWillMount() {
-        this.props.dispatch({type: 'users/listAll', payload: ""});
+        this.props.dispatch({type: 'users/query', payload: ""});
     }
-    handleDeleteAction(id){
-        this.props.dispatch({
-            type:'users/remove',
-            payload: {id}
+    handleDeleteAction(record){
+        const data = remove(record._links.self.href);
+        Promise.resolve(data).then((value)=> {
+            message.success("删除成功")
+            this.loadFromServer();
+        }).catch(function (value) {
+            message.error("删除失败")
         })
     }
-    createHandler(values) {
-        this.props.dispatch({
-            type: 'users/create',
-            payload: values,
-        });
+    componentDidMount() {
+        this.loadFromServer();
+    }
+    loadFromServer() {
+        const data = query();
+        Promise.resolve(data).then((value)=> {
+            this.setState({
+                   data:value._embedded.users
+                }
+            )
+        })
+    }
+    createHandler(values,record) {
+        let data;
+        if (isEmptyObject(record)) {
+            data = create(values);
+        } else {
+            data = update(values, record._links.self.href);
+        }
+        Promise.resolve(data).then((value)=> {
+            message.success("创建成功")
+            this.loadFromServer();
+        }).catch(function (value) {
+            message.error("创建失败")
+        })
     }
     render() {
         const columns = [
-            {title: '姓名', dataIndex: 'teacherName', key: 'teacherName'},
-            {title: '工号', dataIndex: 'jobNumber', key: 'jobNumber'},
-            {title: '部门', dataIndex: 'department', key: 'department'},
+            {title: '姓名', dataIndex: 'username', key: 'username'},
+            {title: '密码', dataIndex: 'password', key: 'password'},
+            /*{title: '部门', dataIndex: 'department', key: 'department'},
             {title: '联系方式', dataIndex: 'contactInformation', key: 'contactInformation'},
-            {title: '籍贯', dataIndex: 'nativePlace', key: 'nativePlace'},
+            {title: '籍贯', dataIndex: 'nativePlace', key: 'nativePlace'},*/
             {
                 title: '操作',
                 key: 'action',
@@ -39,31 +68,13 @@ class PCStaffData extends React.Component {
                             <Col span="6"> <PCStaffModel record={record} onOk={this.createHandler.bind(this)}>
                                 <Button type="primary">编辑</Button>
                             </PCStaffModel></Col>
-                            <Col span="6"><Popconfirm title="确定删除用户?" onConfirm={this.handleDeleteAction.bind(this,record.jobNumber)} okText="是" cancelText="否">
+                            <Col span="6"><Popconfirm title="确定删除用户?" onConfirm={this.handleDeleteAction.bind(this,record)} okText="是" cancelText="否">
                                 <Button href="#">删除</Button>
                             </Popconfirm></Col>
                         </Row>
                 ),
             }
         ];
-        const {list,queryMessage} = this.props.users;
-        const data = list.content;
-        const {dispatch} = this.props;
-        if((queryMessage.deleteMessage||"").length > 0){
-            message.error(queryMessage.deleteMessage)
-        }
-        var pagination = {
-            total: list.length,
-            defaultCurrent: 1,
-            pageSize: 5,
-            onChange(current) {
-                this.current = current
-                dispatch({
-                    type: 'users/listAll',
-                    payload: {size: 5, page: current}
-                });
-            }
-        };
 
         return (
             <div>
@@ -72,7 +83,7 @@ class PCStaffData extends React.Component {
                         <Button type="primary">创建用户</Button>
                     </PCStaffModel>
                 </div>
-                <Table rowKey="id" columns={columns} dataSource={data} pagination={pagination}/>
+                <Table rowKey="id" columns={columns} dataSource={this.state.data} />
             </div>
         );
     }
