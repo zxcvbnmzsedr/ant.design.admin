@@ -60,7 +60,7 @@ class PCStaffModel extends React.Component{
         const { username,password } = this.props.record;
         const menu = (
             <Menu>
-                <Menu.Item key="1">1st menu item</Menu.Item>
+                <Menu.Item key="1">1st menu b item</Menu.Item>
                 <Menu.Item key="2">2nd menu item</Menu.Item>
                 <Menu.Item key="3">3d menu item</Menu.Item>
             </Menu>
