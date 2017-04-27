@@ -40,3 +40,10 @@ export async  function queryRoles(params) {
         method: 'get'
     })
 }
+
+export async  function updateRoles(params) {
+    return request('/users/role', {
+        method: 'put',
+        data: JSON.stringify(params)
+    })
+}

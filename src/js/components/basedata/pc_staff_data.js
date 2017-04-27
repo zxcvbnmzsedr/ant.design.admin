@@ -48,6 +48,7 @@ class PCStaffData extends React.Component {
         if (isEmptyObject(record)) {
             data = create(values);
         } else {
+            console.log("用户创建",values)
             data = update(values, record._links.self.href);
         }
         Promise.resolve(data).then((value)=> {
@@ -62,9 +63,6 @@ class PCStaffData extends React.Component {
             {title: '姓名', dataIndex: 'username', key: 'username'},
             {title: '密码', dataIndex: 'password', key: 'password'},
             {title: '角色', dataIndex: 'rolesDescribe', key: 'rolesDescribe'},
-            /*{title: '部门', dataIndex: 'department', key: 'department'},
-            {title: '联系方式', dataIndex: 'contactInformation', key: 'contactInformation'},
-            {title: '籍贯', dataIndex: 'nativePlace', key: 'nativePlace'},*/
             {
                 title: '操作',
                 key: 'action',

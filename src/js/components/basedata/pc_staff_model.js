@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import {Menu, Modal, Form, Icon,Input ,Dropdown,Button,message} from 'antd';
+import {Menu, Modal, Form, Icon,Input,Select ,Dropdown,Button,message} from 'antd';
 const FormItem = Form.Item;
-import {update,query,remove,create,queryRoles} from '../../service/user';
+import {update,query,remove,create,queryRoles,updateRoles} from '../../service/user';
 class PCStaffModel extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
             visible: false,
-            roles:""
+            roles:"",
+            userName:"",
+            rolesMenu:[]
         };
     }
     showModelHandler(e){
@@ -35,36 +37,30 @@ class PCStaffModel extends React.Component{
         this.loadFromServer();
     }
     loadFromServer() {
-        for(var key in this.props.record._links){
-            if(key == 'roles'){
-                console.log(this.props.record._links.roles.href)
-                const data = queryRoles(this.props.record._links.roles.href);
-                Promise.resolve(data).then((value)=> {
-                   console.log(value._embedded);
-                   console.log(value._embedded.roles[0].description);
-                   this.setState({
-                       roles:value._embedded.roles[0].description
-                   })
-                }).catch((value)=> {
+        // 所有可供选择的角色
+        const data = queryRoles("/api/roles");
+        Promise.resolve(data).then((value)=> {
+            this.setState({
+                rolesMenu:value._embedded.roles
+            })
+        }).catch((value)=> {
 
-                })
+        })
 
-            }
-
-        }
     };
+
 
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
-        const { username,password } = this.props.record;
+        const { username,password,rolesDescribe } = this.props.record;
         const menu = (
-            <Menu>
-                <Menu.Item key="1">1st menu b item</Menu.Item>
-                <Menu.Item key="2">2nd menu item</Menu.Item>
-                <Menu.Item key="3">3d menu item</Menu.Item>
-            </Menu>
+            this.state.rolesMenu.map((result) => {
+                return <Select.Option key={result.name} value={result.description}>{result.description}</Select.Option>
+            })
         );
+
+
         return(
             <div>
                 <span onClick={this.showModelHandler.bind(this)}>
@@ -99,19 +95,17 @@ class PCStaffModel extends React.Component{
                             })(<Input size='large' placeholder='密码' />)}
                         </FormItem>
                         <FormItem hasFeedback>
-                            {getFieldDecorator('password', {
-                                initialValue: password,
+                            {getFieldDecorator('rolesDescribe', {
+                                initialValue:rolesDescribe,
                                 rules: [
                                     {
                                         required: true,
-                                        message: '请填写密码'
+                                        message: '请选择角色'
                                     }
                                 ]
-                            })(<Dropdown overlay={menu}>
-                                <Button style={{ marginLeft: 8 }}>
-                                    {this.state.roles} <Icon type="down" />
-                                </Button>
-                            </Dropdown>)}
+                            })(<Select style={{ width: 120 }}>
+                                {menu}
+                            </Select>)}
                         </FormItem>
                     </Form>
                 </Modal>
