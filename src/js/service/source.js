@@ -7,3 +7,9 @@ export async  function findAll () {
         method: 'get',
     })
 }
+
+export async  function remove (params) {
+    return request('/sources/'+params, {
+        method: 'delete',
+    })
+}

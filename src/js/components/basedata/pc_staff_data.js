@@ -70,7 +70,8 @@ class PCStaffData extends React.Component {
                         <Row>
                             <Col span="6"> <PCStaffModel record={record} onOk={this.createHandler.bind(this)}>
                                 <Button type="primary">编辑</Button>
-                            </PCStaffModel></Col>
+                                    </PCStaffModel>
+                            </Col>
                             <Col span="6"><Popconfirm title="确定删除用户?" onConfirm={this.handleDeleteAction.bind(this,record)} okText="是" cancelText="否">
                                 <Button href="#">删除</Button>
                             </Popconfirm></Col>
