@@ -4,7 +4,7 @@ import 'antd/dist/antd.css';
 import PCIndex from './components/pc_index';
 import PCLayout from './components/pc_layout';
 import PCSourceData from './components/basedata/pc_source_data';
-import PCStaffData from './components/basedata/pc_staff_data'
+import PCStaffData from './components/basedata/pc_user_data'
 import PCRoleData from './components/basedata/pc_role_data'
 export default function () {
     return (

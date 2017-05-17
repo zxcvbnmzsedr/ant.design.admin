@@ -8,28 +8,21 @@ import { CookiesProvider, withCookies, Cookies } from 'react-cookie';
 class PCIndex extends React.Component{
     constructor(){
         super();
-
+        this.state = {
+            login:false
+        };
     }
-    componentWillMount() {
-        const { cookies } = this.props;
-    }
-
-    componentDidUpdate(){
-        const {loginMessage,user,login} = this.props.users;
-        if(!login&&loginMessage.length > 0){
-            message.error(loginMessage);
-        }
+    loginSuccess(){
+        this.setState({
+            login: true
+        });
     }
     render(){
-        const {login,user} = this.props.users;
         return(
-            <div>
-                {login?
-                    <div>
-                        <PCDashboard location={this.props.location}/>
-                    </div> : <LoginComponents/>
+            <div>{
+                    this.state.login?<PCDashboard location={this.props.location}/>:<LoginComponents loginSuccess={this.loginSuccess.bind(this)}/>
                 }
-            </div>
+                </div>
         );
     }
 }

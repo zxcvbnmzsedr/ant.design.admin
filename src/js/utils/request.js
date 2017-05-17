@@ -1,6 +1,6 @@
 import 'whatwg-fetch';
 export default function request(url, options) {
-    url = "/api" + url;
+    url = "/api/v1.0" + url;
     console.log(options)
     var body;
 
@@ -10,22 +10,12 @@ export default function request(url, options) {
         method: options.method || 'get',
         headers: {'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'Access-Token': sessionStorage.getItem('token') || '' // 从sessionStorage中获取access token
+                        'Access-Token': (sessionStorage.getItem('userId')+','+sessionStorage.getItem('token'))||''
              },
         body:options.data
     })
         .then((res) => {
-            // delete status success
-            if (res.status === 204) {
-                return Promise.resolve(new Object(204));
-            }
             if(res.status === 400){
-                return Promise.reject(new Object(204));
-            }
-            if(res.status === 404){
-                return Promise.reject(new Object(204));
-            }
-            if(res.status === 500){
                 return Promise.reject(res.json());
             }
             return res.json();

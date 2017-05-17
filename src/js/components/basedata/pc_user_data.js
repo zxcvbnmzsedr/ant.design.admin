@@ -4,8 +4,8 @@
 import {Table, Popconfirm, Button,message ,Row,Col} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
-import PCStaffModel from './pc_staff_model';
-import {update,query,remove,create,queryRoles} from '../../service/user';
+import PCStaffModel from './pc_user_model';
+import {update,query,remove,create} from '../../service/user';
 import { isEmptyObject} from '../../utils';
 class PCStaffData extends React.Component {
     constructor(props) {

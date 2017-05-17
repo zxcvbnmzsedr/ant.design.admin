@@ -5,11 +5,7 @@ import dva from 'dva';
 import React from 'react';
 import Root from './root';
 
-import UserModel from './models/users';
-
 const app = dva();
-
-app.model(UserModel)
 
 // 3. View
 

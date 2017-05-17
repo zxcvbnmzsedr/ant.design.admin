@@ -2,36 +2,45 @@
  * Created by tianzeng on 2017-03-15.
  */
 import React from 'react'
-import { Button, Row, Form, Input,message } from 'antd';
+import {Button, Row, Form, Input,message} from 'antd';
 import styles from '../../css/login.css';
-import { connect } from 'dva';
-import { config } from '../utils';
+import {connect} from 'dva';
+import {config} from '../utils';
 const FormItem = Form.Item;
-
-class LoginComponents extends React.Component{
-    constructor(){
+import {token} from '../service/token';
+class LoginComponents extends React.Component {
+    constructor() {
         super();
     }
-    componentWillMount(){
 
-    }
-   handleOk(){
-        this.props.form.validateFields((err,values)=>{
-                if(!err){
+    handleOk() {
+        this.props.form.validateFields((err, values) => {
+                if (!err) {
                     console.log('接收到登录表单的参数: ', values);
-                    this.props.dispatch({type: 'users/login',payload: values});
+                    const data = token(values);
+                    Promise.resolve(data).then((value) => {
+                        this.props.loginSuccess();
+                        console.log('请求成功: ', value);
+                        sessionStorage.setItem('token', value.token);
+                        sessionStorage.setItem('userId', value.userId);
+                    }).catch((value)=> {
+                        Promise.resolve(value).then((err)=>{
+                            message.error(err.message)
+                        })
+
+                    })
                 }
             }
         );
     }
 
-    render(){
-        const { getFieldDecorator,loginButtonLoading } = this.props.form;
+    render() {
+        const {getFieldDecorator, loginButtonLoading} = this.props.form;
 
-        return(
+        return (
             <div className={styles.form}>
                 <div className={styles.logo}>
-                    <img src={config.logoSrc} />
+                    <img src={config.logoSrc}/>
                     <span>Ant Design</span>
                 </div>
                 <Form>
@@ -41,10 +50,10 @@ class LoginComponents extends React.Component{
                             rules: [
                                 {
                                     required: true,
-                                    message: '请填写用 户名'
+                                    message: '请填写用户名'
                                 }
                             ]
-                        })(<Input size='large' placeholder='用户名' />)}
+                        })(<Input size='large' placeholder='用户名'/>)}
                     </FormItem>
                     <FormItem hasFeedback>
                         {getFieldDecorator('password', {
@@ -54,10 +63,11 @@ class LoginComponents extends React.Component{
                                     message: '请填写密码'
                                 }
                             ]
-                        })(<Input size='large' type='password' placeholder='密码' />)}
+                        })(<Input size='large' type='password' placeholder='密码'/>)}
                     </FormItem>
                     <Row>
-                        <Button type='primary' size='large' onClick={this.handleOk.bind(this)} loading={loginButtonLoading}>
+                        <Button type='primary' size='large' onClick={this.handleOk.bind(this)}
+                                loading={loginButtonLoading}>
                             登录
                         </Button>
                     </Row>
