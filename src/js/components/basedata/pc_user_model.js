@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Menu, Modal, Form, Icon,Input,Select ,Dropdown,Button,message} from 'antd';
 const FormItem = Form.Item;
-import {update,query,remove,create,queryRoles,updateRoles} from '../../service/user';
+import {findAll} from '../../service/roles';
 class PCStaffModel extends React.Component{
     constructor(props) {
         super(props);
@@ -38,7 +38,7 @@ class PCStaffModel extends React.Component{
     }
     loadFromServer() {
         // 所有可供选择的角色
-        const data = queryRoles("/api/roles");
+        const data = findAll();
         Promise.resolve(data).then((value)=> {
             this.setState({
                 rolesMenu:value._embedded.roles
@@ -53,10 +53,11 @@ class PCStaffModel extends React.Component{
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
-        const { username,password,rolesDescribe } = this.props.record;
+        const { username,password} = this.props.record;
+        console.log("前面",this.props.roles);
         const menu = (
             this.state.rolesMenu.map((result) => {
-                return <Select.Option key={result.name} value={result.description}>{result.description}</Select.Option>
+                return <Select.Option key={result.name} value={result.name}>{result.description}</Select.Option>
             })
         );
 
@@ -95,8 +96,8 @@ class PCStaffModel extends React.Component{
                             })(<Input size='large' placeholder='密码' />)}
                         </FormItem>
                         <FormItem hasFeedback>
-                            {getFieldDecorator('rolesDescribe', {
-                                initialValue:rolesDescribe,
+                            {getFieldDecorator('roles[0].name', {
+                                initialValue:this.props.roles,
                                 rules: [
                                     {
                                         required: true,

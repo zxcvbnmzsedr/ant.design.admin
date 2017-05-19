@@ -18,6 +18,12 @@ export default function request(url, options) {
             if(res.status === 400){
                 return Promise.reject(res.json());
             }
+            if(res.status === 500){
+                return Promise.reject(res.json());
+            }
+            if(res.status === 204){
+                return Promise.resolve("成功");
+            }
             return res.json();
 
         });

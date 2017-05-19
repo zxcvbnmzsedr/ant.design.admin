@@ -5,8 +5,7 @@ import {Table, Popconfirm, Button,message ,Row,Col} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
 import PCStaffModel from './pc_user_model';
-import {update,query,remove,create} from '../../service/user';
-import { isEmptyObject} from '../../utils';
+import {listAll,createUser,updateUser,deleteUser} from '../../service/user';
 class PCStaffData extends React.Component {
     constructor(props) {
         super(props);
@@ -15,24 +14,24 @@ class PCStaffData extends React.Component {
         }
 
     }
-    componentWillMount() {
-        this.props.dispatch({type: 'users/query', payload: ""});
-    }
     handleDeleteAction(record){
-        const data = remove(record._links.self.href);
+        const data = deleteUser(record);
         Promise.resolve(data).then((value)=> {
             message.success("删除成功")
             this.loadFromServer();
-        }).catch(function (value) {
-            message.error("删除失败")
+        }).catch((value)=> {
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
         })
     }
     componentDidMount() {
         this.loadFromServer();
     }
     loadFromServer() {
-        const data = query();
+        const data = listAll();
         Promise.resolve(data).then((value)=> {
+            console.log(value);
             this.setState({
                     data:value._embedded.users
                 }
@@ -43,32 +42,53 @@ class PCStaffData extends React.Component {
             })
         })
     }
-    createHandler(values,record) {
-        let data;
-        if (isEmptyObject(record)) {
-            data = create(values);
-        } else {
-            console.log("用户创建",values)
-            data = update(values, record._links.self.href);
-        }
+
+    /**
+     * 创建用户
+     * @param values
+     * @param action
+     */
+    createHandler(values) {
+        console.log("创建用户",values);
+        const data = createUser(values);
         Promise.resolve(data).then((value)=> {
-            message.success("创建成功")
+            console.log("创建用户返回的结果",value);
             this.loadFromServer();
-        }).catch(function (value) {
-            message.error("创建失败")
+        }).catch((value)=> {
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
         })
     }
+
+    /**
+     * 更新用户
+     * @param values
+     */
+    updateHandler(values,record){
+        console.log("更新用户",values);
+        const data = updateUser(values,record);
+        Promise.resolve(data).then((value)=> {
+            console.log("更新用户返回的结果",value);
+            this.loadFromServer();
+        }).catch((value)=> {
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
+        })
+    }
+
+
     render() {
         const columns = [
             {title: '姓名', dataIndex: 'username', key: 'username'},
-            {title: '密码', dataIndex: 'password', key: 'password'},
-            {title: '角色', dataIndex: 'rolesDescribe', key: 'rolesDescribe'},
+            {title: '角色', dataIndex: '_embedded.roles[0].name', key: 'roles'},
             {
                 title: '操作',
                 key: 'action',
                 render: (text, record) => (
                         <Row>
-                            <Col span="6"> <PCStaffModel record={record} onOk={this.createHandler.bind(this)}>
+                            <Col span="6"> <PCStaffModel record={record} roles={record._embedded.roles[0].name} onOk={this.updateHandler.bind(this)}>
                                 <Button type="primary">编辑</Button>
                                     </PCStaffModel>
                             </Col>
