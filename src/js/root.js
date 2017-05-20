@@ -3,9 +3,9 @@ import {Router, Route, hashHistory} from 'dva/router';
 import 'antd/dist/antd.css';
 import PCIndex from './components/pc_index';
 import PCLayout from './components/pc_layout';
-import PCSourceData from './components/basedata/pc_source_data';
-import PCUserData from './components/basedata/pc_user_data'
-import PCRoleData from './components/basedata/pc_role_data'
+import PCSourceData from './components/basedata/source/pc_source_data';
+import PCUserData from './components/basedata/user/pc_user_data'
+import PCRoleData from './components/basedata/role/pc_role_data'
 export default function () {
     return (
         <Router history={hashHistory}>

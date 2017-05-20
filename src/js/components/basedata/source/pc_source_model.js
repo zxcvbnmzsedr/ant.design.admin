@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Menu, Modal, Form, Icon,Input,Select ,Dropdown,Button,message} from 'antd';
 const FormItem = Form.Item;
-import {findAll} from '../../service/roles';
-class PCStaffModel extends React.Component{
+import {findAll} from '../../../service/roles';
+class PCSourceModel extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
@@ -33,34 +33,12 @@ class PCStaffModel extends React.Component{
             }
         });
     };
-    componentDidMount() {
-        this.loadFromServer();
-    }
-    loadFromServer() {
-        // 所有可供选择的角色
-        const data = findAll();
-        Promise.resolve(data).then((value)=> {
-            this.setState({
-                rolesMenu:value._embedded.roles
-            })
-        }).catch((value)=> {
-
-        })
-
-    };
 
 
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
-        const { username,password} = this.props.record;
-        console.log("前面",this.props.roles);
-        const menu = (
-            this.state.rolesMenu.map((result) => {
-                return <Select.Option key={result.name} value={result.name}>{result.description}</Select.Option>
-            })
-        );
-
+        const { name,httpUrl} = this.props.record;
 
         return(
             <div>
@@ -74,39 +52,26 @@ class PCStaffModel extends React.Component{
                     visible={this.state.visible}>
                     <Form>
                         <FormItem hasFeedback>
-                            {getFieldDecorator('username', {
-                                initialValue: username,
+                            {getFieldDecorator('name', {
+                                initialValue: name,
                                 rules: [
                                     {
                                         required: true,
-                                        message: '请填写用户名'
+                                        message: '请填写资源名称'
                                     }
                                 ]
-                            })(<Input size='large' placeholder='姓名' />)}
+                            })(<Input size='large' placeholder='资源名称' />)}
                         </FormItem>
                         <FormItem hasFeedback>
-                            {getFieldDecorator('password', {
-                                initialValue: password,
+                            {getFieldDecorator('httpUrl', {
+                                initialValue: httpUrl,
                                 rules: [
                                     {
                                         required: true,
-                                        message: '请填写密码'
+                                        message: '请填写资源路径'
                                     }
                                 ]
                             })(<Input size='large' placeholder='密码' />)}
-                        </FormItem>
-                        <FormItem hasFeedback>
-                            {getFieldDecorator('roles[0].name', {
-                                initialValue:this.props.roles,
-                                rules: [
-                                    {
-                                        required: true,
-                                        message: '请选择角色'
-                                    }
-                                ]
-                            })(<Select style={{ width: 120 }}>
-                                {menu}
-                            </Select>)}
                         </FormItem>
                     </Form>
                 </Modal>
@@ -114,4 +79,4 @@ class PCStaffModel extends React.Component{
         );
     }
 }
-export default Form.create({})(PCStaffModel);
+export default Form.create({})(PCSourceModel);

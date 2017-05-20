@@ -5,7 +5,7 @@ import {Table, Popconfirm, Button,message ,Row,Col} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
 import PCStaffModel from './pc_user_model';
-import {listAll,createUser,updateUser,deleteUser} from '../../service/user';
+import {listAll,createUser,updateUser,deleteUser} from '../../../service/user';
 class PCStaffData extends React.Component {
     constructor(props) {
         super(props);
