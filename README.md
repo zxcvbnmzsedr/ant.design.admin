@@ -1,12 +1,10 @@
 # 基于Ant.Design的后台权限管理
 ## 简介
 基于Spring Boot,SpringMvc,Spring Data Rest,Ant.design的后台权限管理
-通过node的代理和reset风格的接口实现前后端分离
 
-## 前端
+## [前端](https://github.com/zxcvbnmzsedr/ant.design.admin)
  前端登陆界面参照 Ant-Admin https://github.com/zuiidea/antd-admin
- 前端通过访问后台的接口解析数据呈现到页面上，个人觉得redux甚是麻烦，所以没用redux控制state
-## 后端
+## [后端](https://github.com/zxcvbnmzsedr/ant.design.admin.server)
  - 所用技术  
     使用Spring Boot 快速搭建  
     使用Redis缓存用户Token  
