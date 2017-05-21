@@ -4,7 +4,7 @@
 import { request,isEmptyObject} from '../utils';
 export async  function findAll () {
     return request('/sources', {
-        method: 'get',
+        method: 'GET',
     })
 }
 

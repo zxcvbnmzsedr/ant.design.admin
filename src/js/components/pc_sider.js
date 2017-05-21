@@ -37,13 +37,6 @@ export default class PCSider extends React.Component {
                         <Menu.Item key="SourceData"><Link to={`/BaseData/SourceData`}>资源管理</Link></Menu.Item>
                         <Menu.Item key="RolesData"><Link to={`/BaseData/RolesData`}>角色管理</Link></Menu.Item>
                     </SubMenu>
-                    <SubMenu key="sub2"
-                        title={<span><Icon type="team"/><span className="nav-text">Team</span></span>}>
-                        <Menu.Item key="4">Team 1</Menu.Item>
-                        <Menu.Item key="5">Team 2</Menu.Item>
-                    </SubMenu>
-                    <Menu.Item key="6"><span><Icon type="file"/><span className="nav-text">File</span></span>
-                    </Menu.Item>
                 </Menu>
             </div>
         );

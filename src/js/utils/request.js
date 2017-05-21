@@ -15,14 +15,17 @@ export default function request(url, options) {
         body:options.data
     })
         .then((res) => {
-            if(res.status === 400){
+            if(res.status.toString().startsWith("4")){
                 return Promise.reject(res.json());
             }
-            if(res.status === 500){
+            if(res.status.toString().startsWith("5")){
                 return Promise.reject(res.json());
             }
-            if(res.status === 204){
-                return Promise.resolve();
+            if(res.status.toString().startsWith("2")){
+                if(res.status === 204){
+                    return Promise.resolve();
+                }
+                return Promise.resolve(res.json());
             }
             return res.json();
 

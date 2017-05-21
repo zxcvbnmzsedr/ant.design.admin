@@ -7,7 +7,7 @@
 import {Table, Popconfirm, Button,message ,Row,Col,Tree} from 'antd';
 import React from 'react';
 import {connect} from 'dva';
-import {findAll,updateRoles} from '../../../service/roles';
+import {findAll,updateRoles,createRoles,deleteRoles} from '../../../service/roles';
 import PCRoleModel from './pc_role_model'
 
 const TreeNode = Tree.TreeNode;
@@ -16,7 +16,8 @@ class PCRoleData extends React.Component {
     constructor(props) {
         super(props);
         this.state={
-            data:[]
+            data:[],
+            defaultValue:[]
         }
     }
     componentWillMount() {
@@ -24,14 +25,10 @@ class PCRoleData extends React.Component {
     }
     loadFromServer() {
         const data = findAll();
+
         Promise.resolve(data).then((value)=> {
-            const data= [];
-            value.obj.map((c,index)=>{
-                data.push({key:c.roleId,name:c.name,description:c.description});
-                console.log(data[index])
-            });
             this.setState({
-                data:data
+                data:value._embedded.roles
             })
         }).catch((value)=> {
             Promise.resolve(value).then((value)=>{
@@ -39,19 +36,53 @@ class PCRoleData extends React.Component {
             })
         })
     }
+
+    /**
+     * 创建角色
+     * @param values
+     * @param record
+     */
     createHandler(values,record) {
-        console.log("权限更新",values,record);
-
-        const data = updateRoles(values,record);
-
+        console.log("用户创建",values,record);
+        const data = createRoles(values);
         Promise.resolve(data).then((value)=> {
-            message.success("创建成功")
+            message.success("创建成功");
             this.loadFromServer();
         }).catch(function (value) {
-            message.error("创建失败")
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
         })
     }
 
+    /**
+     * 更新角色
+     * @param values
+     * @param record
+     */
+    updateHandler(values,record) {
+        console.log("更新角色",values,record);
+        const data = updateRoles(record,values);
+        Promise.resolve(data).then((value)=> {
+            message.success("更新成功");
+            this.loadFromServer();
+        }).catch((value)=> {
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
+        })
+    }
+    handleDeleteAction(record){
+        const data = deleteRoles(record);
+        Promise.resolve(data).then((value)=> {
+            message.success("删除成功")
+            this.loadFromServer();
+        }).catch((value)=> {
+            Promise.resolve(value).then((value)=>{
+                message.error("请求失败:"+value.message)
+            })
+        })
+    }
     render(){
         const columns = [{
             title: '名称',
@@ -70,13 +101,12 @@ class PCRoleData extends React.Component {
                 <Row>
                     <Col span="6">
                         <Col span="6">
-                            <PCRoleModel record={record} onOk={this.createHandler.bind(this,record)}>
+                            <PCRoleModel record={record} onOk={this.updateHandler.bind(this,record)}>
                                 <Button type="primary">编辑</Button>
                             </PCRoleModel>
                         </Col>
                     </Col>
-                    <Col span="6">
-                    <Popconfirm title="确定删除资源?" okText="是" cancelText="否">
+                    <Col span="6"><Popconfirm title="确定删除资源?" onConfirm={this.handleDeleteAction.bind(this,record)} okText="是" cancelText="否">
                         <Button href="#">删除</Button>
                     </Popconfirm></Col>
                 </Row>
@@ -84,6 +114,9 @@ class PCRoleData extends React.Component {
         }];
         return (
             <div>
+                <PCRoleModel record={{}} onOk={this.createHandler.bind(this)}>
+                    <Button type="primary">创建角色</Button>
+                </PCRoleModel>
                 <Table columns={columns} dataSource={this.state.data} />
             </div>
         );

@@ -33,6 +33,12 @@ class PCStaffModel extends React.Component{
         const { onOk } = this.props;
         this.props.form.validateFields((err, values) => {
             if (!err) {
+                const permissions = [];
+                for(const des in values.permissions){
+                    permissions.push({"description":values.permissions[des]});
+                }
+                console.log('onChange ', permissions);
+                values.permissions = permissions;
                 onOk(values,this.props.record);
                 this.hideModelHandler();
             }
@@ -40,8 +46,13 @@ class PCStaffModel extends React.Component{
     };
 
     onChange(value){
-        // console.log('onChange ', value, arguments);
+
         this.setState({ value });
+        const permissions = [];
+        for(const des in value){
+            permissions.push({"description":value[des]});
+        }
+        console.log('onChange ', permissions);
     }
     componentWillMount() {
         this.loadFromServer();
@@ -50,22 +61,30 @@ class PCStaffModel extends React.Component{
         const data = findAll();
         Promise.resolve(data).then((value)=> {
             const data= [];
-            value.obj.map((c,index)=>{
-                data.push({key:c.id+"",value:c.id+"",label:c.description,children:[]});
-                const children = [];
-                for (const i in c.permissions){
-                    const permission = c.permissions[i];
-                    children.push({
-                        key:c.id+"-"+permission.id,// 资源ID-权限ID
-                        label:permission.description,
-                        value:c.id+"-"+permission.id
-                    });
-                }
-                data[index].children = children;
+            console.log("资源列表",value)
+            value._embedded.sources.map((c,index)=>{
+                data.push({key:c.name+"",value:c.name+"",label:c.name,children:[
+                    {   key:c.name+"创建",
+                        value:c.name+"创建",
+                        label:c.name+"创建"
+                    },
+                    {   key:c.name+"删除",
+                        value:c.name+"删除",
+                        label:c.name+"删除"
+                    },
+                    {   key:c.name+"修改",
+                        value:c.name+"修改",
+                        label:c.name+"修改"
+                    },
+                    {   key:c.name+"查询",
+                        value:c.name+"查询",
+                        label:c.name+"查询"
+                    },
+                ]});
             });
             this.setState({
                 data:data
-            })
+            });
 
             console.log("构造树",data)
 
@@ -78,7 +97,14 @@ class PCStaffModel extends React.Component{
     render(){
         const { children } = this.props;
         const {getFieldDecorator} = this.props.form;
-        const { name,description } = this.props.record;
+        const { name,description,_embedded } = this.props.record;
+        const defaultValue = [];
+        if (typeof _embedded != 'undefined'){
+            _embedded.permissions.forEach( function( ele , idx , array ){
+                defaultValue.push(ele.description)
+            })
+        }
+        console.log("初始化权限",_embedded,defaultValue)
         return(
             <div>
                 <span onClick={this.showModelHandler.bind(this)}>
@@ -96,10 +122,10 @@ class PCStaffModel extends React.Component{
                                 rules: [
                                     {
                                         required: true,
-                                        message: '请填写权限名称'
+                                        message: '请填写角色名称'
                                     }
                                 ]
-                            })(<Input size='large' placeholder='权限名称' />)}
+                            })(<Input size='large' placeholder='角色名称' />)}
                         </FormItem>
                         <FormItem hasFeedback>
                             {getFieldDecorator('description', {
@@ -107,13 +133,14 @@ class PCStaffModel extends React.Component{
                                 rules: [
                                     {
                                         required: true,
-                                        message: '请填写权限描述'
+                                        message: '请填写角色描述'
                                     }
                                 ]
-                            })(<Input size='large' placeholder='权限描述' />)}
+                            })(<Input size='large' placeholder='角色描述' />)}
                         </FormItem>
                         <FormItem hasFeedback>
-                            {getFieldDecorator('permission', {
+                            {getFieldDecorator('permissions', {
+                                initialValue:defaultValue,
                                 rules: [
                                     {
                                         required: true,
@@ -126,7 +153,7 @@ class PCStaffModel extends React.Component{
                                 multiple={true}
                                 treeCheckable={true}
                                 showCheckedStrategy={SHOW_PARENT}
-                                searchPlaceholder='Please select'
+                                searchPlaceholder='操作资源'
                                 style={{ width: 300 }}/>)}
 
                         </FormItem>
